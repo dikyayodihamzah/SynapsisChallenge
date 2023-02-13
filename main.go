@@ -18,9 +18,10 @@ func main() {
 
 	//products route
 	product.Get("/", product_controller.Index)
+	product.Get("/:id", product_controller.Show)
 
 	//cart items route
-	cart_item.Get("/", cart_item_controller.FindAll)
+	cart_item.Get("/", cart_item_controller.Index)
 	cart_item.Get("/:id", cart_item_controller.Show)
 	cart_item.Post("/", cart_item_controller.Create)
 	cart_item.Put("/:id", cart_item_controller.Update)
