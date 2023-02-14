@@ -9,7 +9,7 @@ type Product struct {
 	Name  string `json:"name"`
 	Desc  string `json:"desc"`
 	Price int	 `json:"price"`
-	CategoryID int `json:"category"`
+	CategoryID uint `json:"category"`
 	Category Category
 }
 

@@ -16,10 +16,10 @@ func ConnectDatabase() {
 
 	db.AutoMigrate(
 		&Customer{}, 
-		&Product{}, 
 		&Category{}, 
+		&Product{}, 
 		&CartItem{},
-		&Order{},
+		// &Order{},
 	)
 	DB = db
 }
