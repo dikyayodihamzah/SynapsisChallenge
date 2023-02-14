@@ -65,7 +65,7 @@ func Update(c *fiber.Ctx) error {
 		})
 	}
 	
-	if models.DB.Where("id = ?", id).Update(&cart_item).RowsAffected == 0 {
+	if models.DB.Where("id = ?", id).Updates(&cart_item).RowsAffected == 0 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Can not update data",
 		})

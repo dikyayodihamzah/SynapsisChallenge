@@ -6,9 +6,13 @@ import (
 
 type Product struct {
 	gorm.Model
+	Name  string `json:"name"`
+	Desc  string `json:"desc"`
+	Price int	 `json:"price"`
+	CategoryID int `json:"category"`
+	Category Category
+}
 
-	// Id    int64  `gorm:"primaryKey" json:"id"`
-	Name  string `gorm:"type:varchar(300)" json:"name"`
-	Desc  string `gorm:"type:varchar(3000)" json:"desc"`
-	Price int64  `json:"price"`
+func (Product) TableName() string {
+	return "products"
 }

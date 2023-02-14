@@ -14,7 +14,12 @@ func ConnectDatabase() {
 		panic(err)
 	}
 
-	db.AutoMigrate(&Product{})
-	db.AutoMigrate(&CartItem{})
+	db.AutoMigrate(
+		&Customer{}, 
+		&Product{}, 
+		&Category{}, 
+		&CartItem{},
+		&Order{},
+	)
 	DB = db
 }
