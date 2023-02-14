@@ -2,11 +2,14 @@ package cart_item_controller
 
 import (
 	"net/http"
+	"os/user"
+	"log"
 
 	"github.com/dikyayodihamzah/SynapsisChallenge/models"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
+
 
 func Index(c *fiber.Ctx) error {
 	var cart_item []models.CartItem
@@ -35,14 +38,35 @@ func Show(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(cart_item)
 }
 
+type CartItemReq struct {
+	ProductID uint `json:"product_id" binding:"required"`
+	Quantity uint `json:"quanitity" binding:"required"`
+}
+
 func Create(c *fiber.Ctx) error {
 
-	var cart_item models.CartItem
-
-	if err := c.BodyParser(&cart_item); err != nil {
+	var cart_item_req CartItemReq
+	
+	if err := c.BodyParser(&cart_item_req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message" : err.Error(),
 		})
+	}
+	
+	if cart_item_req.Quantity  < 1 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Quantity must greater than 0",
+		})
+	} 
+
+	customer, err := user.Current()
+	if err != nil {
+		return c.JSON(err.Error())
+	}
+	cart_item := models.CartItem{
+		OrderID: customerID,
+		ProductID: cart_item_req.ProductID,
+		Quantity:  int(cart_item_req.Quantity),
 	}
 
 	if err := models.DB.Create(&cart_item).Error; err != nil {
@@ -50,6 +74,7 @@ func Create(c *fiber.Ctx) error {
 			"message" : err.Error(),
 		})
 	}
+
 
 	return c.JSON(cart_item)
 }
