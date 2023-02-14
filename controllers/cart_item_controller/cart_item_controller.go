@@ -65,22 +65,30 @@ func Update(c *fiber.Ctx) error {
 		})
 	}
 	
-	if models.DB.First(&cart_item, id).Error; err != nil {
-		
-		if err == gorm.ErrRecordNotFound {
-			return c.Status(http.StatusNotFound).JSON(fiber.Map{
-				"message": "Item tidak ditemukan",
-			})
-		}
-
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-		}) 
+	if models.DB.Where("id = ?", id).Update(&cart_item).RowsAffected == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Can not update data",
+		})
 	}
 	
-	
+	return c.JSON(fiber.Map{
+		"message": "Data succesfully updated",
+	})
 }
 
 func Delete(c *fiber.Ctx) error {
-	return nil
+
+	id := c.Params("id")
+	var cart_item models.CartItem
+
+	if models.DB.Delete(&cart_item, id).RowsAffected == 0 {
+		return c.Status(http.StatusNotFound).JSON(fiber.Map{
+			"message": "Data not found",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "Data succesfully deleted",
+	})
+
 }
