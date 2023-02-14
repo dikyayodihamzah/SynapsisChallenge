@@ -1,8 +1,9 @@
 package main
 
-import (
+import (	
 	"github.com/dikyayodihamzah/SynapsisChallenge/controllers/cart_item_controller"
 	"github.com/dikyayodihamzah/SynapsisChallenge/controllers/product_controller"
+	"github.com/dikyayodihamzah/SynapsisChallenge/controllers/auth_controller"
 	"github.com/dikyayodihamzah/SynapsisChallenge/models"
 	"github.com/gofiber/fiber/v2"
 )
@@ -27,6 +28,11 @@ func main() {
 	cart_item.Put("/:id", cart_item_controller.Update)
 	cart_item.Delete("/:id", cart_item_controller.Delete)
 
+	//auth route
+	app.Post("/login", auth_controller.Login)
+	app.Post("/signup", auth_controller.SignUp)
 
-	app.Listen(":3000")
+	if err := app.Listen(":3000"); err != nil {
+		panic(err)
+	}
 }

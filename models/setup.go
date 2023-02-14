@@ -9,7 +9,7 @@ var DB *gorm.DB
 
 
 func ConnectDatabase() {
-	db, err := gorm.Open(mysql.Open("root:@tcp(localhost:3306)/synapsis_challenge"))
+	db, err := gorm.Open(mysql.Open("root:@tcp(localhost:3306)/synapsis_challenge?parseTime=true"))
 	if err != nil {
 		panic(err)
 	}
@@ -19,7 +19,7 @@ func ConnectDatabase() {
 		&Category{}, 
 		&Product{}, 
 		&CartItem{},
-		// &Order{},
+		&Order{},
 	)
 	DB = db
 }
