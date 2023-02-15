@@ -25,7 +25,7 @@ func main() {
 	cart_item.Get("/", cart_item_controller.Index)
 	cart_item.Get("/:id", cart_item_controller.Show)
 	cart_item.Post("/", cart_item_controller.Create)
-	cart_item.Put("/:id", cart_item_controller.Update)
+	// cart_item.Put("/:id", cart_item_controller.Update)
 	cart_item.Delete("/:id", cart_item_controller.Delete)
 
 	//auth route

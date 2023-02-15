@@ -9,7 +9,8 @@ type Customer struct {
 	Name     string `json:"name" binding:"required"`
 	Email    string `json:"email" binding:"required, email" gorm:"unique"`
 	Password string `json:"password" binding:"required"`
-	Orders []Order
+	Orders   []Order
+	CartItem []CartItem
 }
 
 func (Customer) TableName() string {

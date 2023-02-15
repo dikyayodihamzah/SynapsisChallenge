@@ -3,13 +3,12 @@ package cart_item_controller
 import (
 	"net/http"
 	"os/user"
-	"log"
+	"strconv"
 
 	"github.com/dikyayodihamzah/SynapsisChallenge/models"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
-
 
 func Index(c *fiber.Ctx) error {
 	var cart_item []models.CartItem
@@ -22,7 +21,7 @@ func Show(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 	var cart_item models.CartItem
-	
+
 	if err := models.DB.First(&cart_item, id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return c.Status(http.StatusNotFound).JSON(fiber.Map{
@@ -40,47 +39,55 @@ func Show(c *fiber.Ctx) error {
 
 type CartItemReq struct {
 	ProductID uint `json:"product_id" binding:"required"`
-	Quantity uint `json:"quanitity" binding:"required"`
+	Quantity  uint `json:"quanitity" binding:"required"`
 }
 
 func Create(c *fiber.Ctx) error {
 
 	var cart_item_req CartItemReq
-	
+
 	if err := c.BodyParser(&cart_item_req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message" : err.Error(),
+			"message": err.Error(),
 		})
 	}
 	
-	if cart_item_req.Quantity  < 1 {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Quantity must greater than 0",
-		})
-	} 
+	if cart_item_req.Quantity < 1 {
+		return c.JSON(cart_item_req)
+		// return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		// 	"message": "Quantity must greater than 0",
+		// })
+	}
 
 	customer, err := user.Current()
 	if err != nil {
 		return c.JSON(err.Error())
 	}
+
+	customer_id, err := strconv.ParseUint(customer.Uid, 10, 32)
+	if err != nil {
+		return c.JSON(err.Error())
+	}
+
 	cart_item := models.CartItem{
-		OrderID: customerID,
-		ProductID: cart_item_req.ProductID,
-		Quantity:  int(cart_item_req.Quantity),
+		CustomerID: uint(customer_id),
+		ProductID:  cart_item_req.ProductID,
+		Quantity:   int(cart_item_req.Quantity),
 	}
 
 	if err := models.DB.Create(&cart_item).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message" : err.Error(),
+			"message": err.Error(),
 		})
 	}
 
-
-	return c.JSON(cart_item)
+	return c.Status(http.StatusCreated).JSON(fiber.Map{
+		"message": "Item(s) added to Cart",
+	})
 }
 
 func Update(c *fiber.Ctx) error {
-	
+
 	id := c.Params("id")
 	var cart_item models.CartItem
 
@@ -89,13 +96,13 @@ func Update(c *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
-	
+
 	if models.DB.Where("id = ?", id).Updates(&cart_item).RowsAffected == 0 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Can not update data",
 		})
 	}
-	
+
 	return c.JSON(fiber.Map{
 		"message": "Data succesfully updated",
 	})
