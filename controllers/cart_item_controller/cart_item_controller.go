@@ -2,8 +2,6 @@ package cart_item_controller
 
 import (
 	"net/http"
-	"os/user"
-	"strconv"
 
 	"github.com/dikyayodihamzah/SynapsisChallenge/models"
 	"github.com/gofiber/fiber/v2"
@@ -39,11 +37,13 @@ func Show(c *fiber.Ctx) error {
 
 type CartItemReq struct {
 	ProductID uint `json:"product_id" binding:"required"`
-	Quantity  uint `json:"quanitity" binding:"required"`
+	Quantity  uint `json:"quantity" binding:"required"`
 }
 
 func Create(c *fiber.Ctx) error {
 
+	//create order table
+	
 	var cart_item_req CartItemReq
 
 	if err := c.BodyParser(&cart_item_req); err != nil {
@@ -51,28 +51,28 @@ func Create(c *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
-	
+
 	if cart_item_req.Quantity < 1 {
-		return c.JSON(cart_item_req)
-		// return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-		// 	"message": "Quantity must greater than 0",
-		// })
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Quantity must greater than 0",
+		})
 	}
 
-	customer, err := user.Current()
-	if err != nil {
-		return c.JSON(err.Error())
-	}
+	// customer, err := user.Current()
+	// if err != nil {
+	// 	return c.JSON(err.Error())
+	// }
 
-	customer_id, err := strconv.ParseUint(customer.Uid, 10, 32)
-	if err != nil {
-		return c.JSON(err.Error())
-	}
+	// customer_id, err := strconv.ParseUint(customer.Uid, 10, 32)
+	// if err != nil {
+	// 	return c.JSON(err.Error())
+	// }
 
 	cart_item := models.CartItem{
-		CustomerID: uint(customer_id),
-		ProductID:  cart_item_req.ProductID,
-		Quantity:   int(cart_item_req.Quantity),
+		CustomerID: 1,
+		// CustomerID: uint(customer_id),
+		ProductID: cart_item_req.ProductID,
+		Quantity:  int(cart_item_req.Quantity),
 	}
 
 	if err := models.DB.Create(&cart_item).Error; err != nil {

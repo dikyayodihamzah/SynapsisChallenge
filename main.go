@@ -32,8 +32,8 @@ func main() {
 	app.Post("/api/login", controllers.Login)
 	app.Post("/api/signup", controllers.SignUp)
 
-	// if err := app.Listen(":3000"); err != nil {
-	// 	panic(err)
-	// }
+	//checkout route
+	app.Post("/api/checkout", controllers.Checkout)
+
 	app.Listen(":3000")
 }

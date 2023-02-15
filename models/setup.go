@@ -18,8 +18,8 @@ func ConnectDatabase() {
 		&Customer{}, 
 		&Category{}, 
 		&Product{}, 
-		&CartItem{},
 		&Order{},
+		&CartItem{},
 	)
 	DB = db
 }

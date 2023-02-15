@@ -8,8 +8,8 @@ type CartItem struct {
 	Customer   Customer
 	ProductID  uint `json:"product_id" binding:"required"`
 	Product    Product
-	OrderID    uint
-	Quantity   int `json:"quantity" binding:"required"`
+	OrderID    uint `json:"order_id" binding:"required"`
+	Quantity   int  `json:"quantity" binding:"required"`
 }
 
 func (CartItem) TableName() string {
