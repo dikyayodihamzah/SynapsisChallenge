@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Order struct {
 	gorm.Model
-	CustomerID uint `json:"customer_id" binding:"required"`
+	CustomerID uint `json:"customer_id" binding:"required" gorm:"primaryKey"`
 	Customer   Customer
 	CartItems  []CartItem
 	Total      uint `json:"total"`

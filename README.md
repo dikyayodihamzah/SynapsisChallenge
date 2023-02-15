@@ -23,4 +23,4 @@ Table relation diagram for those functionality.
 
 ## API Docs
 
-[Postman API documentation]()
+[Postman API documentation](https://documenter.getpostman.com/view/17703536/2s93CEvbNu)

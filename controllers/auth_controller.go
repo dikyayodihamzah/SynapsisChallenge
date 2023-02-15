@@ -117,6 +117,17 @@ func SignUp(c *fiber.Ctx) error {
 		})
 	}
 
+	//Initialize order record for customer
+	order := models.Order{
+		CustomerID: newCustomer.ID,
+	}
+
+	if err := models.DB.Create(&order).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"message": "User succesfully created",
 	})
